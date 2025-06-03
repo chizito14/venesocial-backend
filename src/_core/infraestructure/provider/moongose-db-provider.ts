@@ -1,5 +1,6 @@
 import { Provider } from "@nestjs/common";
 import { connect } from "mongoose";
+import { envs } from "src/config/envs";
 
 export const MongooseDataBaseProvider: Provider = 
   {

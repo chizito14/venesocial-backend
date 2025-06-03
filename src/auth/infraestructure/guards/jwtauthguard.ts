@@ -5,13 +5,13 @@ import { Mongoose } from "mongoose";
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
 
-    private userRepository: OdmUserRepository
+    //private userRepository: OdmUserRepository
 
     constructor(
         private jwtService: JwtService,
         @Inject('NoSQL') mongo: Mongoose 
     ) {
-        this.userRepository = new OdmUserRepository(mongo)
+        //this.userRepository = new OdmUserRepository(mongo)
     }
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -21,9 +21,9 @@ export class JwtAuthGuard implements CanActivate {
         if ( type != 'Bearer' || !token ) throw new UnauthorizedException()                       
         try {
             const payload = await this.jwtService.verifyAsync( token, { secret: process.env.JWT_SECRET_KEY } )
-            const userData = await this.userRepository.findById(payload.id)
-            if (!userData) throw new UnauthorizedException()
-            request['user'] = userData
+            //const userData = await this.userRepository.findById(payload.id)
+            //if (!userData) throw new UnauthorizedException()
+            //request['user'] = userData
         } catch { throw new UnauthorizedException() }
         return true
     }

@@ -1,4 +1,4 @@
-# docker-compose up -d
+services:
   mongodb:
     image: mongo:8.0
     container_name: mongodb
