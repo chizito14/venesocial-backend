@@ -6,7 +6,7 @@ export type OdmUserDocument = OdmUser & Document;
 @Schema({ collection: 'users', timestamps: true })
 export class OdmUser extends Document {
     @Prop({ type: String, unique: true, required: true, index: true })
-    userid: string; // Identificador único personalizado (ej. UUID)
+    idUser: string; 
 
     @Prop({ type: String, unique: true, required: true, trim: true, lowercase: true })
     username: string;
@@ -43,6 +43,12 @@ export class OdmUser extends Document {
 
     @Prop({ type: Boolean, default: false })
     isPrivate: boolean;
+
+    @Prop({ type: Date, default: true })
+    createdAt: Date;
+
+    @Prop({ type: Date, default: true })
+    updateAt: Date;
 
     // timestamps: true añadirá createdAt y updatedAt automáticamente
 }
