@@ -25,7 +25,6 @@ export class SignUp implements IService<SignUpEntry, SignUpResponse> {
             email: data.email,
             password: hashed,
             fullName: data.fullName,
-            bio: data.bio,
             isPrivate: false
         })
         return Result.success({ id: id })
