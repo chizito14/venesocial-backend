@@ -4,14 +4,13 @@ import { IRepoComment } from "src/post/application/repository/repository-comment
 import { OdmComment, OdmCommentSchema } from "../entity/odm-comment";
 import { Model, Mongoose } from "mongoose";
 import { Result } from "src/_core/utils/result-handler/result.handler";
-import { Err } from "joi";
 
 export class OdmRepositoryComment implements IRepoComment {
     
     private readonly model: Model<OdmComment>
     
     constructor( mongoose: Mongoose ) { 
-        this.model = mongoose.model<OdmComment>('OdmPost', OdmCommentSchema)
+        this.model = mongoose.model<OdmComment>('OdmComment', OdmCommentSchema)
     }
     
     async findMany(entry: {  idPost: string; createdAt: Date }, pagination: Pagination): Promise<IComment[]> {
