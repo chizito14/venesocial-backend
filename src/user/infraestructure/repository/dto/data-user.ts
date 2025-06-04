@@ -1,4 +1,5 @@
-export interface ReturnDtoUser { 
+
+export interface DataUser { 
     idUser:string
     username:string
     email:  string

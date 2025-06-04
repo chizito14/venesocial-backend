@@ -3,7 +3,7 @@ import { Pagination } from "src/_core/infraestructure/pagination-dto/pagination-
 import { IUser } from "src/user/application/entity/user.interface";
 import { IRepoUser } from "src/user/application/repository/repository-user.interface";
 import { Result } from "src/_core/utils/result-handler/result.handler";
-import { ReturnDtoUser } from "./dto/userReturn-interface";
+import { DataUser } from "./dto/data-user";
 import { OdmUser, OdmUserSchema } from "../entity/odm-user";
 
 export class OdmRepositoryUser implements IRepoUser {
@@ -14,11 +14,12 @@ export class OdmRepositoryUser implements IRepoUser {
         this.model = mongoose.model<OdmUser>('OdmUser', OdmUserSchema)
     }
 
-    async findMany(entry: { username?: string; }, pagination: Pagination): Promise<ReturnDtoUser[]> {
+    async findMany(entry: { username?: string, id?: string[] }, pagination: Pagination): Promise<DataUser[]> {
         const query: any = {}
         if (entry.username) query.username = new RegExp(entry.username, "i")
+        if (entry.id && entry.id.length > 0) query.idUser = { $in: entry.id }
         const result = await this.model.find( query, {}, { skip: pagination.page, limit: pagination.perPage })
-        let mapped: ReturnDtoUser[] = []
+        let mapped: DataUser[] = []
         result.forEach( e => mapped.push(
             {
                 idUser:e.idUser,
