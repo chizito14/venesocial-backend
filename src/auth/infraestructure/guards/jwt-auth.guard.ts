@@ -2,6 +2,7 @@ import { CanActivate, ExecutionContext, Inject, Injectable, UnauthorizedExceptio
 import { JwtService } from "@nestjs/jwt";
 import { Mongoose } from "mongoose";
 import { IRepoUser } from "src/user/application/repository/repository-user.interface";
+import { OdmRepositoryUser } from "src/user/infraestructure/repository/odm-repo-user";
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -12,7 +13,7 @@ export class JwtAuthGuard implements CanActivate {
         private jwtService: JwtService,
         @Inject('NoSQL') mongo: Mongoose 
     ) {
-        //this.userRepository = new OdmUserRepository(mongo)
+        this.userRepo = new OdmRepositoryUser(mongo)
     }
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -21,10 +22,17 @@ export class JwtAuthGuard implements CanActivate {
         const [type, token] = request.headers['authorization'].split(' ') ?? []
         if ( type != 'Bearer' || !token ) throw new UnauthorizedException()                       
         try {
-            const payload = await this.jwtService.verifyAsync( token, { secret: '' } )
-            //const userData = await this.userRepository.findById(payload.id)
-            //if (!userData) throw new UnauthorizedException()
-            //request['user'] = userData
+            const payload = await this.jwtService.verifyAsync( token, { secret: ' mariasal ' } )
+            const userData = await (await this.userRepo.findById(payload.id)).Value
+            if (!userData) throw new UnauthorizedException()
+            request['user'] = {
+                idUser: userData.idUser,
+                username: userData.username,
+                email: userData.email,
+                fullName: userData.fullName,
+                bio: userData.bio,
+                profilePictureUrl: userData.profilePictureUrl
+            }
         } catch { throw new UnauthorizedException() }
         return true
     }
