@@ -3,6 +3,7 @@ import { Mongoose } from "mongoose";
 import { IRepoUser } from "src/user/application/repository/repository-user.interface";
 import { GetManyUsers } from "../types/get-many-users";
 import { JwtAuthGuard } from "src/auth/infraestructure/guards/jwt-auth.guard";
+import { OdmRepositoryUser } from "../repository/odm-repo-user";
 
 @Controller('user')
 export class UserController {
@@ -12,7 +13,9 @@ export class UserController {
 
     constructor(
         @Inject('NoSQL') mongo: Mongoose,
-    ) {}
+    ) {
+        this.userRepo = new OdmRepositoryUser(mongo)
+    }
 
     @Get('find/username')
     @UseGuards(JwtAuthGuard)
