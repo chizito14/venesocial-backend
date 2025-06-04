@@ -4,46 +4,44 @@ import { IRepoComment } from "src/post/application/repository/repository-comment
 import { OdmComment, OdmCommentSchema } from "../entity/odm-comment";
 import { Model, Mongoose } from "mongoose";
 import { Result } from "src/_core/utils/result-handler/result.handler";
+import { Err } from "joi";
 
 export class OdmRepositoryComment implements IRepoComment {
     
     private readonly model: Model<OdmComment>
     
-        constructor( mongoose: Mongoose ) { 
-            this.model = mongoose.model<OdmComment>('OdmPost', OdmCommentSchema)
-        }
+    constructor( mongoose: Mongoose ) { 
+        this.model = mongoose.model<OdmComment>('OdmPost', OdmCommentSchema)
+    }
     
     async findMany(entry: {  idPost: string; createdAt: Date }, pagination: Pagination): Promise<IComment[]> {
         const query: any = {};
         query.idPost = entry.idPost;
         if (entry.createdAt) {
-        query.createdAt = entry.createdAt;
+            query.createdAt = entry.createdAt;
         }
 
         const result = await this.model.find(query, {}, {
-        skip: pagination.page,
-        limit: pagination.perPage,
-        sort: { createdAt: -1 }
+            skip: pagination.page,
+            limit: pagination.perPage,
+            sort: { createdAt: -1 }
         });
 
         return result.map((e: any) => ({
-        idComment: e.idComment,
-        idAuthor: e.idAuthor,
-        idPost: e.idPost,
-        text: e.text,
-        createdAt: e.createdAt
+            idComment: e.idComment,
+            idAuthor: e.idAuthor,
+            idPost: e.idPost,
+            text: e.text,
+            createdAt: e.createdAt
         }));
     }
     
-
     async createComment(entry: IComment): Promise<Result <string>> {
         try {
-      const createdComment = await this.model.create(entry);
-      return Result.success(createdComment.idComment);
-    } catch (error: any) {
-      console.error("Error al crear comentario:", error);
-      return Result.fail (  Error(`Fallo al crear comentario: ${error.message || 'Error desconocido'}`))
+            const createdComment = await this.model.create(entry);
+            return Result.success(createdComment.idComment);
+        } catch (error ) {
+            return Result.fail ( error )
+        }
     }
-  }
-
 }
