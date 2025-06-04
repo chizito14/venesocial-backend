@@ -8,7 +8,7 @@ export class OdmLike extends Document {
     idPost: string; 
 
     @Prop({ type: String, unique: true, required: true, index: true  })
-    idAuthor: string;
+    idUser: string;
 
 }
 
