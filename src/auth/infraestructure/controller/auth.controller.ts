@@ -9,10 +9,10 @@ import { UUIDGenerator } from "src/_core/infraestructure/uuid-generator/uuid-gen
 import { BcryptEncryptor } from "src/_core/infraestructure/encryptor/encryptor-brypt";
 import { JwtService } from "@nestjs/jwt";
 import { LogInEntry } from "src/auth/application/service/log-in/types/log-in.entry";
-import { LogIn } from "src/auth/application/service/log-in/Log-In";
 import { IJWTGenerator } from "src/_core/application/jwt-generator/jwt-generator.interface";
 import { RepositoryUser } from "src/user/infraestructure/repository/repo-user";
 import { JWTGenerator } from "src/_core/infraestructure/jwt-generator/jwt";
+import { LogIn } from "src/auth/application/service/log-in/log-In";
 
 @Controller('auth')
 export class AuthController {
@@ -41,6 +41,7 @@ export class AuthController {
             this.jwtg
         )
         const result = await service.execute(entry)
+        if(!result.isSuccess()) throw result.Error
         return result.Value
     }
 

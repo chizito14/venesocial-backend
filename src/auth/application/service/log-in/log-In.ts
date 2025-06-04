@@ -21,7 +21,7 @@ export class LogIn implements IService<LogInEntry, LogInResponse> {
         const find = await this.repo.findByEmail(data.email)
         if (!find.isSuccess()) return Result.fail( new Error('Email no encontrado') )
         const password = await this.encryptor.compareHash(data.password, find.Value.password )
-        if ( !password ) throw new Error ('contraseña incorrecta')
+        if ( !password ) return Result.fail (new Error ('contraseña incorrecta'))
         return Result.success( { token: this.jwt.generate(   find.Value.idUser  ) })
         }
 
