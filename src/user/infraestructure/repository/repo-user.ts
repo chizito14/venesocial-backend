@@ -2,11 +2,11 @@ import { Model, Mongoose } from "mongoose";
 import { Pagination } from "src/_core/infraestructure/pagination-dto/pagination-dto";
 import { IUser } from "src/user/application/entity/user.interface";
 import { IRepoUser } from "src/user/application/repository/repository-user.interface";
-import { OdmUser, OdmUserSchema } from "../odm-user";
 import { Result } from "src/_core/utils/result-handler/result.handler";
 import { ReturnDtoUser } from "./dto/userReturn-interface";
+import { OdmUser, OdmUserSchema } from "../entity/odm-user";
 
-export class RepositoryUser implements IRepoUser{
+export class RepositoryUser implements IRepoUser {
     
     private readonly model: Model<OdmUser>
 
@@ -18,6 +18,13 @@ export class RepositoryUser implements IRepoUser{
         if (!odm) return Result.fail<IUser>(new Error('No fue encontrado'))
         return Result.success<IUser>(odm)
     }
+
+    async findByEmail(email: string): Promise<Result<IUser>> {
+        const odm = await this.model.findOne( { email: email } )
+        if (!odm) return Result.fail<IUser>(new Error('No fue encontrado'))
+        return Result.success<IUser>(odm)
+    }
+
     async findMany(pag: Pagination): Promise<ReturnDtoUser[]> {
         const result = await this.model.find({},{},{ skip: pag.page, limit: pag.perPage })
         let mapped: ReturnDtoUser[] = []

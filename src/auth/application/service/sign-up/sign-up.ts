@@ -15,14 +15,20 @@ export class SignUp implements IService<SignUpEntry, SignUpResponse> {
     ){}
 
     async execute(data: SignUpEntry): Promise<Result<SignUpResponse>> {
+        const find = await this.repo.findByEmail(data.email)
+        if (find.isSuccess()) return Result.fail( new Error('Email registrado') )
         const id = this.uuid.generate()
         const hashed = await this.encryptor.hash(data.password)
-        // this.repo.createUser({})
-
-        return Result.success({
-            id: id
+        await this.repo.createUser({
+            idUser: id,
+            username: data.username,
+            email: data.email,
+            password: hashed,
+            fullName: data.fullName,
+            bio: data.bio,
+            isPrivate: false
         })
-    
+        return Result.success({ id: id })
     }
 
 }

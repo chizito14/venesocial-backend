@@ -7,5 +7,5 @@ export interface IUser {
     fullName: string
     bio?: string
     profilePictureUrl?: string
-    isPrivate?: boolean
+    isPrivate: boolean
 }
