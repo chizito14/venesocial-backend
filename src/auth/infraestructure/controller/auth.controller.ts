@@ -53,6 +53,7 @@ export class AuthController {
             this.uuid,
         )
         const result = await service.execute( entry )
+        if(!result.isSuccess()) throw result.Error
         return result.Value
     }
     
