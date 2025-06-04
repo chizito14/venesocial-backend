@@ -1,9 +1,7 @@
 import { BadRequestException } from "@nestjs/common";
 
 export class Result<T> {
-    static forEach(arg0: (e: any) => number) {
-        throw new Error("Method not implemented.");
-    }
+    
     private value?: T
     private error?: Error
 
