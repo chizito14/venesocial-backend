@@ -2,8 +2,7 @@
 export interface IComment {
     idComment: string;
     idAuthor: string 
-    post: string 
+    idPost: string 
     text: string;
     createdAt: Date;
-    
 }
