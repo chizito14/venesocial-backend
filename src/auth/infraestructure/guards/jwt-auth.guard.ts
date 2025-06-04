@@ -1,11 +1,12 @@
 import { CanActivate, ExecutionContext, Inject, Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { Mongoose } from "mongoose";
+import { IRepoUser } from "src/user/application/repository/repository-user.interface";
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
 
-    //private userRepository: OdmUserRepository
+    private userRepo: IRepoUser
 
     constructor(
         private jwtService: JwtService,
@@ -20,7 +21,7 @@ export class JwtAuthGuard implements CanActivate {
         const [type, token] = request.headers['authorization'].split(' ') ?? []
         if ( type != 'Bearer' || !token ) throw new UnauthorizedException()                       
         try {
-            const payload = await this.jwtService.verifyAsync( token, { secret: process.env.JWT_SECRET_KEY } )
+            const payload = await this.jwtService.verifyAsync( token, { secret: '' } )
             //const userData = await this.userRepository.findById(payload.id)
             //if (!userData) throw new UnauthorizedException()
             //request['user'] = userData
