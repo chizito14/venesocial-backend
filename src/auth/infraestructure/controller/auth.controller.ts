@@ -8,6 +8,11 @@ import { IEncryptor } from "src/_core/application/encryptor/encryptor.interface"
 import { UUIDGenerator } from "src/_core/infraestructure/uuid-generator/uuid-generator";
 import { BcryptEncryptor } from "src/_core/infraestructure/encryptor/encryptor-brypt";
 import { JwtService } from "@nestjs/jwt";
+import { LogInEntry } from "src/auth/application/service/log-in/types/log-in.entry";
+import { LogIn } from "src/auth/application/service/log-in/Log-In";
+import { IJWTGenerator } from "src/_core/application/jwt-generator/jwt-generator.interface";
+import { RepositoryUser } from "src/user/infraestructure/repository/repo-user";
+import { JWTGenerator } from "src/_core/infraestructure/jwt-generator/jwt";
 
 @Controller('auth')
 export class AuthController {
@@ -16,6 +21,7 @@ export class AuthController {
     private readonly uuid: IUUIDGenerator
     private readonly encryptor: IEncryptor
     private readonly logger = new Logger('AuthController')
+    private readonly jwtg: IJWTGenerator
 
     constructor(
         @Inject('NoSQL') mongo: Mongoose,
@@ -23,10 +29,20 @@ export class AuthController {
     ) {
         this.uuid = new UUIDGenerator()
         this.encryptor = new BcryptEncryptor()
+        this.userRepo = new RepositoryUser(mongo)
+        this.jwtg = new JWTGenerator(jwt)
     }
 
     @Post('login')
-    async logIn() {}
+    async logIn(@Body() entry: LogInEntry) {
+        const service = new LogIn(
+            this.userRepo,
+            this.encryptor,
+            this.jwtg
+        )
+        const result = await service.execute(entry)
+        return result.Value
+    }
 
     @Post('register')
     async signUp( @Body() entry: SignUpEntry ) {
