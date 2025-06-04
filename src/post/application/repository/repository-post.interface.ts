@@ -1,5 +1,5 @@
 import { Pagination } from "src/_core/infraestructure/pagination-dto/pagination-dto";
-import { IPost } from "../post.interface";
+import { IPost } from "../entity/post.interface";
 
 
 export interface IRepoPost { 

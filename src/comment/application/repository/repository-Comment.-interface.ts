@@ -1,5 +1,5 @@
 import { Pagination } from "src/_core/infraestructure/pagination-dto/pagination-dto";
-import { IComment } from "../comment-interface";
+import { IComment } from "../entity/comment-interface";
 
 
 export interface IRepoComment { 

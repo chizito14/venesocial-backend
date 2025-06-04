@@ -1,5 +1,5 @@
 import { Pagination } from "src/_core/infraestructure/pagination-dto/pagination-dto";
-import { ILike } from "../like-interface";
+import { ILike } from "../entity/like-interface";
 
 
 export interface IRepoLike { 
