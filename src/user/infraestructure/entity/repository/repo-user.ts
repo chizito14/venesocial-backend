@@ -1,0 +1,51 @@
+import { Model, Mongoose } from "mongoose";
+import { Pagination } from "src/_core/infraestructure/pagination-dto/pagination-dto";
+import { IUser } from "src/user/application/entity/user.interface";
+import { IRepoUser } from "src/user/application/repository/repository-user.interface";
+import { OdmUser, OdmUserSchema } from "../odm-user";
+import { Result } from "src/_core/utils/result-handler/result.handler";
+import { ReturnDtoUser } from "./dto/userReturn-interface";
+
+export class RepositoryUser implements IRepoUser{
+    
+    private readonly model: Model<OdmUser>
+
+    constructor( mongoose: Mongoose ) { 
+        this.model = mongoose.model<OdmUser>('OdmUser', OdmUserSchema)
+    }
+    async findById(id: string): Promise<Result<IUser>> {
+        const odm = await this.model.findOne( { idUser: id } )
+        if (!odm) return Result.fail<IUser>(new Error('No fue encontrado'))
+        return Result.success<IUser>(odm)
+    }
+    async findMany(pag: Pagination): Promise<ReturnDtoUser[]> {
+        const result = await this.model.find({},{},{ skip: pag.page, limit: pag.perPage })
+        let mapped: ReturnDtoUser[] = []
+        result.forEach( e => mapped.push(
+            {
+                idUser:e.idUser,
+                username: e.username,
+                email: e.email,
+                fullName: e.fullName,
+                bio: e.bio,
+                profilePictureUrl: e.profilePictureUrl,
+                isPrivate: e.isPrivate
+            }
+        ))
+        return mapped
+    }
+
+    async createUser(entry: IUser): Promise<Result<string>> {
+        try {
+        const odm = new this.model(entry)
+        await this.model.create( odm )
+        } catch (e) {
+            console.log(e)
+        }    
+        return Result.success(entry.idUser)
+    }
+
+    
+   
+
+}

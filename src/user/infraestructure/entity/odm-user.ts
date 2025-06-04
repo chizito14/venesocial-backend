@@ -24,31 +24,11 @@ export class OdmUser extends Document {
     @Prop({ type: String }) 
     profilePictureUrl?: string;
 
-    // @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'OdmPost' }] })
-    // posts: OdmPost[]; // Publicaciones hechas por el usuario
-
-    @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'OdmUser' }] })
-    followers: OdmUser[]; // Usuarios que siguen a este usuario
-
-    @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'OdmUser' }] })
-    following: OdmUser[]; // Usuarios a los que este usuario sigue
-
-    // @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'OdmPost' }] })
-    // savedPosts: OdmPost[]; // Publicaciones guardadas por el usuario
-
-    // @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'OdmStory' }] })
-    // stories: OdmStory[]; // Historias activas del usuario
-
     @Prop({ type: Boolean, default: false })
     isPrivate: boolean;
 
-    @Prop({ type: Date, default: true })
-    createdAt: Date;
-
-    @Prop({ type: Date, default: true })
-    updateAt: Date;
 
 }
 
 export const OdmUserSchema = SchemaFactory.createForClass(OdmUser);
-OdmUserSchema.index({ username: 'text' });
+// OdmUserSchema.index({ username: 'text' });
