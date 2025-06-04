@@ -35,6 +35,8 @@ export class PostController {
     @Get('likes')
     @UseGuards(JwtAuthGuard)
     async findManyLikes( @Query() entry: GetManyLikes ){
+        const find = await this.PostRepo.findById(entry.idPost)
+        if (!find) throw new Error ('Post no registrado')
         let page:number = 0
         let perPage:number = 10
         if (entry.page) page = parseInt(entry.page)
@@ -44,32 +46,33 @@ export class PostController {
 
     @Post('likes')
     @UseGuards(JwtAuthGuard)
-    async createLike( @Body() entry: CreateLike ) {
+    async createLike( @Body() entry: CreateLike, @GetUser() user: IUser ) {
+        const find = await this.PostRepo.findById(entry.idPost)
+        if (!find) throw new Error ('Post no registrado')
         await this.likeRepo.createLike({
             idPost: entry.idPost,
-            idUser: entry.idUser
+            idUser: user.idUser
         })
     }
 
     @Post('dislike')
     @UseGuards(JwtAuthGuard)
-    async disLike( @Body() entry: CreateLike ) {
+    async disLike( @Body() entry: CreateLike, @GetUser() user: IUser ) {
         await this.likeRepo.deleteLike({
             idPost: entry.idPost,
-            idUser: entry.idUser
+            idUser: user.idUser
         })
     }
 
     @Get('find')
     @UseGuards(JwtAuthGuard)
-    async findManyRecently( @Query() entry:GetManyPost  ){
+    async findManyRecently( @Query() entry: GetManyPost  ){
         let page:number = 0
         let perPage:number = 10
         if (entry.page) page = parseInt(entry.page)
         if (entry.perPage) perPage = parseInt(entry.perPage)
-        if (entry.idUser) {
+        if (entry.idUser) 
             return await this.PostRepo.findMany( { idAuthor: entry.idUser, createdAt: new Date() } ,{ page: page, perPage: perPage } )
-        } 
         return await this.PostRepo.findMany( { createdAt: new Date()  } ,{ page: page, perPage: perPage } )
     }
 

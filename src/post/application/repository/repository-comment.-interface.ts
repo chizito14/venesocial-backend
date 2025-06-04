@@ -12,6 +12,6 @@ export interface IRepoComment {
         pagination: Pagination 
     ): Promise <IComment[]>
 
-    createComment(entry: IComment ): Promise <Result <string>>
+    createComment( entry: IComment ): Promise<Result<string>>
 
 }
