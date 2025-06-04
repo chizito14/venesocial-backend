@@ -1,25 +1,23 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
-import { OdmPost } from "src/post/infraestructure/entity/odm-post";
-import { OdmUser } from "src/user/infraestructure/entity/odm-user";
 
 @Schema({ collection: 'comments', timestamps: true })
 export class OdmComment extends Document {
 
     @Prop({ type: String, unique: true, required: true, index: true })
-    idComment: string;  
+    idComment: string  
 
     @Prop({ type: String, required: true, index: true })
-    idAuthor: OdmUser;  
+    idAuthor: string  
 
     @Prop({ type: String, required: true, index: true })
-    idPost: OdmPost;
+    idPost: string
 
     @Prop({ type: String, required: true, maxlength: 1000 })
-    text: string;
+    text: string
 
     @Prop({ type: Date, required: true })
-    createdAt: Date;
+    createdAt: Date
 
 }
 

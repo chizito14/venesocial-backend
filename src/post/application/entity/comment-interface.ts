@@ -1,8 +1,8 @@
 
 export interface IComment {
-    idComment: string;
+    idComment: string
     idAuthor: string 
     idPost: string 
-    text: string;
-    createdAt: Date;
+    text: string
+    createdAt: Date
 }
