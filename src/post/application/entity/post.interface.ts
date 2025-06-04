@@ -1,8 +1,7 @@
-import { IUser } from 'src/user/application/entity/user.interface'
 
 export interface IPost {
     idPost: string
-    idAuthor: IUser
+    idAuthor: string
     mediaUrlImage: string[]
     mediaUrlVideo: string[]
     likeCount: number

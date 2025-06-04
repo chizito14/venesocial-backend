@@ -4,10 +4,12 @@ import { ILike } from "../entity/like-interface";
 
 export interface IRepoLike { 
 
-    findById(id: string ): Promise <ILike>
-
-    findMany(pagination: Pagination ): Promise <ILike[]>
-
-    createLike(entry: ILike ): Promise <string>
+    findMany(
+        entry: { 
+            idUser?: string,
+            idPost?: string 
+        }, 
+        pagination: Pagination ): Promise<ILike[]>
+    createLike(entry: ILike ): Promise<string>
 
 }

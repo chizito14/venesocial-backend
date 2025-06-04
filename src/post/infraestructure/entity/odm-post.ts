@@ -1,11 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
 
-export enum MediaType {
-    IMAGE = "image",
-    VIDEO = "video"
-}
-
 @Schema({ collection: 'posts', timestamps: true })
 export class OdmPost extends Document {
 

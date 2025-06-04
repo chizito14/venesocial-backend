@@ -13,20 +13,11 @@ export class RepositoryUser implements IRepoUser {
     constructor( mongoose: Mongoose ) { 
         this.model = mongoose.model<OdmUser>('OdmUser', OdmUserSchema)
     }
-    async findById(id: string): Promise<Result<IUser>> {
-        const odm = await this.model.findOne( { idUser: id } )
-        if (!odm) return Result.fail<IUser>(new Error('No fue encontrado'))
-        return Result.success<IUser>(odm)
-    }
 
-    async findByEmail(email: string): Promise<Result<IUser>> {
-        const odm = await this.model.findOne( { email: email } )
-        if (!odm) return Result.fail<IUser>(new Error('No fue encontrado'))
-        return Result.success<IUser>(odm)
-    }
-
-    async findMany(pag: Pagination): Promise<ReturnDtoUser[]> {
-        const result = await this.model.find({},{},{ skip: pag.page, limit: pag.perPage })
+    async findMany(entry: { username?: string; }, pagination: Pagination): Promise<ReturnDtoUser[]> {
+        const query: any = {}
+        if (entry.username) query.username = new RegExp(entry.username, "i")
+        const result = await this.model.find( query, {}, { skip: pagination.page, limit: pagination.perPage })
         let mapped: ReturnDtoUser[] = []
         result.forEach( e => mapped.push(
             {
@@ -41,6 +32,19 @@ export class RepositoryUser implements IRepoUser {
         ))
         return mapped
     }
+    
+    async findById(id: string): Promise<Result<IUser>> {
+        const odm = await this.model.findOne( { idUser: id } )
+        if (!odm) return Result.fail<IUser>(new Error('No fue encontrado'))
+        return Result.success<IUser>(odm)
+    }
+
+    async findByEmail(email: string): Promise<Result<IUser>> {
+        const odm = await this.model.findOne( { email: email } )
+        if (!odm) return Result.fail<IUser>(new Error('No fue encontrado'))
+        return Result.success<IUser>(odm)
+    }
+
 
     async createUser(entry: IUser): Promise<Result<string>> {
         try {
