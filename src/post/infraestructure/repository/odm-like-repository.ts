@@ -50,7 +50,7 @@ export class OdmLikeRepository implements IRepoLike {
     async deleteLike(entry: ILike): Promise<void> {
         try {
             const odm = this.like.findOneAndDelete({
-                idPost: entry.idUser,
+                idPost: entry.idPost,
                 idUser: entry.idUser
             })
         } catch (e) {}   

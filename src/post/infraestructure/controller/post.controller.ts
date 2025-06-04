@@ -11,11 +11,16 @@ import { GetUser } from "src/auth/infraestructure/decorator/get-user.decorator";
 import { FilesInterceptor } from "@nestjs/platform-express";
 import { uploadFile } from "src/_core/infraestructure/firebase/firebase.storage.service";
 import { IUser } from "src/user/application/entity/user.interface";
+import { GetManyLikes } from "../types/get-many-likes";
+import { IRepoLike } from "src/post/application/repository/repository-like.interface";
+import { OdmLikeRepository } from "../repository/odm-like-repository";
+import { CreateLike } from "../types/create-like.entry";
 
 @Controller('post')
 export class PostController {
  
     private readonly PostRepo: IRepoPost
+    private readonly likeRepo: IRepoLike
     private readonly uuid: IUUIDGenerator
     private readonly logger = new Logger('PostController')
 
@@ -24,8 +29,37 @@ export class PostController {
     ) {
         this.uuid = new UUIDGenerator()
         this.PostRepo = new OdmRepositoryPost(mongo)
+        this.likeRepo = new OdmLikeRepository(mongo)
     }
-    
+
+    @Get('likes')
+    @UseGuards(JwtAuthGuard)
+    async findManyLikes( @Query() entry: GetManyLikes ){
+        let page:number = 0
+        let perPage:number = 10
+        if (entry.page) page = parseInt(entry.page)
+        if (entry.perPage) perPage = parseInt(entry.perPage)
+        return await this.likeRepo.findMany({ idPost: entry.idPost, }, { page: page, perPage: perPage } )
+    }
+
+    @Post('likes')
+    @UseGuards(JwtAuthGuard)
+    async createLike( @Body() entry: CreateLike ) {
+        await this.likeRepo.createLike({
+            idPost: entry.idPost,
+            idUser: entry.idUser
+        })
+    }
+
+    @Post('dislike')
+    @UseGuards(JwtAuthGuard)
+    async disLike( @Body() entry: CreateLike ) {
+        await this.likeRepo.deleteLike({
+            idPost: entry.idPost,
+            idUser: entry.idUser
+        })
+    }
+
     @Get('find')
     @UseGuards(JwtAuthGuard)
     async findManyRecently( @Query() entry:GetManyPost  ){
