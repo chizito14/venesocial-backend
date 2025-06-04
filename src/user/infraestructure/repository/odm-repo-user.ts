@@ -6,7 +6,7 @@ import { Result } from "src/_core/utils/result-handler/result.handler";
 import { ReturnDtoUser } from "./dto/userReturn-interface";
 import { OdmUser, OdmUserSchema } from "../entity/odm-user";
 
-export class RepositoryUser implements IRepoUser {
+export class OdmRepositoryUser implements IRepoUser {
     
     private readonly model: Model<OdmUser>
 
@@ -48,10 +48,10 @@ export class RepositoryUser implements IRepoUser {
 
     async createUser(entry: IUser): Promise<Result<string>> {
         try {
-        const odm = new this.model(entry)
-        await this.model.create( odm )
+            const odm = new this.model(entry)
+            await this.model.create( odm )
         } catch (e) {
-            console.log(e)
+            return Result.fail(e)
         }    
         return Result.success(entry.idUser)
     }

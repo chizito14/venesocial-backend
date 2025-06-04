@@ -10,7 +10,7 @@ import { BcryptEncryptor } from "src/_core/infraestructure/encryptor/encryptor-b
 import { JwtService } from "@nestjs/jwt";
 import { LogInEntry } from "src/auth/application/service/log-in/types/log-in.entry";
 import { IJWTGenerator } from "src/_core/application/jwt-generator/jwt-generator.interface";
-import { RepositoryUser } from "src/user/infraestructure/repository/repo-user";
+import { OdmRepositoryUser } from "src/user/infraestructure/repository/odm-repo-user";
 import { JWTGenerator } from "src/_core/infraestructure/jwt-generator/jwt";
 import { LogIn } from "src/auth/application/service/log-in/log-In";
 
@@ -29,7 +29,7 @@ export class AuthController {
     ) {
         this.uuid = new UUIDGenerator()
         this.encryptor = new BcryptEncryptor()
-        this.userRepo = new RepositoryUser(mongo)
+        this.userRepo = new OdmRepositoryUser(mongo)
         this.jwtg = new JWTGenerator(jwt)
     }
 
