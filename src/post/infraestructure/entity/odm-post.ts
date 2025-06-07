@@ -10,11 +10,11 @@ export class OdmPost extends Document {
     @Prop({ type: String, required: true, index: true })
     idAuthor: string 
 
-    @Prop({ type: String, required: true })
-    mediaUrlImage: string[]
+    @Prop({ type: [String], required: false })
+    mediaUrlImage?: string[]
 
-    @Prop({ type: String, required: true })
-    mediaUrlVideo: string[]
+    @Prop({ type: [String], required: false })
+    mediaUrlVideo?: string[]
     
     @Prop({ type: String, maxlength: 2200 })
     caption?: string;

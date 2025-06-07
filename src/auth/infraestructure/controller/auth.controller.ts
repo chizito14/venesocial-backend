@@ -32,7 +32,7 @@ export class AuthController {
         this.userRepo = new OdmRepositoryUser(mongo)
         this.jwtg = new JWTGenerator(jwt)
     }
-
+    
     @Post('login')
     async logIn(@Body() entry: LogInEntry) {
         const service = new LogIn(

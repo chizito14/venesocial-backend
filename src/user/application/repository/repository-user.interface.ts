@@ -8,5 +8,6 @@ export interface IRepoUser {
     findByEmail( email: string ): Promise <Result<IUser> >
     findMany( entry: { username?: string, id?: string[] }, pagination: Pagination ): Promise <DataUser[]>
     createUser( entry: IUser ): Promise <Result <string>>
+    updatePhoto(userId: string, photoPath: string): Promise<IUser> 
 
 }

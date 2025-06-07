@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, Logger, Post, Query, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Get, Inject, Logger, Post, Query, UploadedFile, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
 import { Mongoose } from "mongoose";
 import { IUUIDGenerator } from "src/_core/application/uuid-generator/uuid-generator.interface";
 import { UUIDGenerator } from "src/_core/infraestructure/uuid-generator/uuid-generator";
@@ -80,7 +80,7 @@ export class PostController {
     @UseGuards(JwtAuthGuard)
 	@UseInterceptors(FilesInterceptor('media', 5))
     async createPost(
-        @UploadedFile() files: Express.Multer.File[],
+        @UploadedFiles() files: Express.Multer.File[],
         @Body() post: CreatePostEntry, 
         @GetUser() user: IUser )
     {

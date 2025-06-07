@@ -5,6 +5,7 @@ import { IRepoUser } from "src/user/application/repository/repository-user.inter
 import { Result } from "src/_core/utils/result-handler/result.handler";
 import { DataUser } from "./dto/data-user";
 import { OdmUser, OdmUserSchema } from "../entity/odm-user";
+import { NotFoundException } from "@nestjs/common";
 
 export class OdmRepositoryUser implements IRepoUser {
     
@@ -57,7 +58,16 @@ export class OdmRepositoryUser implements IRepoUser {
         return Result.success(entry.idUser)
     }
 
-    
-   
+    async updatePhoto(userId: string, photoPath: string): Promise<IUser> {
 
+    const updatedUser = await this.model.findOneAndUpdate(
+      {idUser: userId},
+      { profilePictureUrl: photoPath },
+      { new: true },
+    ).exec();
+    if (!updatedUser) {
+      throw new NotFoundException(`User with ID ${userId} not found.`);
+    }
+        return updatedUser;
+    }
 }

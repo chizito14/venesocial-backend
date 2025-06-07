@@ -1,9 +1,10 @@
-import { Controller, Get, Inject, Logger, Param, Query, UseGuards } from "@nestjs/common";
+import { Controller, Get, Inject, Logger, Param, Put, Query, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { Mongoose } from "mongoose";
 import { IRepoUser } from "src/user/application/repository/repository-user.interface";
 import { GetManyUsers } from "../types/get-many-users";
 import { JwtAuthGuard } from "src/auth/infraestructure/guards/jwt-auth.guard";
 import { OdmRepositoryUser } from "../repository/odm-repo-user";
+import { FileInterceptor } from "@nestjs/platform-express";
 
 @Controller('user')
 export class UserController {
@@ -36,5 +37,27 @@ export class UserController {
     async findById( @Param('id') id: string ) {
         return (await this.userRepo.findById(id)).Value
     }
-    
+
+@Put('upload/:userId') // Usamos PUT para actualizar un recurso existente
+  @UseInterceptors(FileInterceptor('photo'))
+  async uploadPhoto(
+    @Param('userId') userId: string, // 
+    @UploadedFile('file') file: Express.Multer.File,
+  ) {
+    if (!file) {
+      return { message: 'No se ha subido ningún archivo.' };
+    }
+
+    const photoPath = `/uploads/${file.filename}`;
+
+    const updatedUser = await this.userRepo.updatePhoto(userId, photoPath);
+
+    return {
+      message: 'Foto subida y usuario actualizado exitosamente!',
+      filename: file.filename,
+      originalName: file.originalname,
+      photoPath: photoPath,
+      user: updatedUser,
+    };
+  }    
 }

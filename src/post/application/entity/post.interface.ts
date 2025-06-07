@@ -2,8 +2,8 @@
 export interface IPost {
     idPost: string
     idAuthor: string
-    mediaUrlImage: string[]
-    mediaUrlVideo: string[]
+    mediaUrlImage?: string[]
+    mediaUrlVideo?: string[]
     likeCount: number
     caption?: string 
     createdAt?: Date
